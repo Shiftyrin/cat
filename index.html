@@ -13,7 +13,7 @@
       background-color: #000;
       color: #fff;
       text-align: center;
-      transition: background 1s, color 1s;
+      transition: background 0.3s, color 0.3s;
     }
     .section {
       height: 100vh;
@@ -46,18 +46,18 @@
     }
     /* Button Theme Overrides */
     body.theme-dark .button {
-      background: rgba(255, 255, 255, 0.1);
-      border: 2px solid rgba(255, 255, 255, 0.5);
+      background: rgba(255,255,255,0.1);
+      border: 2px solid rgba(255,255,255,0.5);
       color: #fff;
     }
     body.theme-gray .button {
-      background: rgba(200, 200, 200, 0.1);
-      border: 2px solid rgba(200, 200, 200, 0.5);
+      background: rgba(200,200,200,0.1);
+      border: 2px solid rgba(200,200,200,0.5);
       color: #ddd;
     }
     body.theme-light .button {
-      background: rgba(0, 0, 0, 0.1);
-      border: 2px solid rgba(0, 0, 0, 0.5);
+      background: rgba(0,0,0,0.1);
+      border: 2px solid rgba(0,0,0,0.5);
       color: #000;
     }
     .button {
@@ -81,7 +81,7 @@
       left: 50%;
       transform: translateX(-50%);
     }
-    /* Navigation Buttons in Reveal - always visible when reveal shows */
+    /* Navigation Buttons in Reveal */
     .nav-buttons {
       margin-top: 20px;
       display: flex;
@@ -98,7 +98,6 @@
       height: 100vh;
       background: inherit;
       color: inherit;
-      display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
@@ -147,35 +146,35 @@
 </head>
 <body>
   <!-- Section 1 -->
-  <div class="section" id="section1">
+  <div class="section" id="section1" data-theme="theme-dark">
     <div class="text-with-image">
       <img src="https://i.postimg.cc/1zndDfyF/Pngtree-isolated-cat-on-white-background-9158356.png" alt="Cat Icon">
       <h1>Introducing Cat</h1>
     </div>
   </div>
   <!-- Section 2 -->
-  <div class="section" id="section2">
+  <div class="section" id="section2" data-theme="theme-gray">
     <div class="text-with-image">
       <img src="https://i.postimg.cc/C58wF0b7/Pngtree-isolated-sitting-orange-cat-on-9158396.png" alt="Cat Icon">
       <h2>A Vision of Elegance</h2>
     </div>
   </div>
   <!-- Section 3 -->
-  <div class="section" id="section3">
+  <div class="section" id="section3" data-theme="theme-light">
     <div class="text-with-image">
       <img src="https://i.postimg.cc/1zndDfyF/Pngtree-isolated-cat-on-white-background-9158356.png" alt="Cat Icon">
       <h2>Bring Colours To Your Life</h2>
     </div>
   </div>
   <!-- Section 4 -->
-  <div class="section" id="section4">
+  <div class="section" id="section4" data-theme="theme-dark">
     <div class="text-with-image">
       <img src="https://i.postimg.cc/1zndDfyF/Pngtree-isolated-cat-on-white-background-9158356.png" alt="Cat Icon">
       <h2>The Perfect Companion As It Never Leaves You</h2>
     </div>
   </div>
   <!-- Section 5 -->
-  <div class="section" id="section5">
+  <div class="section" id="section5" data-theme="theme-gray">
     <div class="text-with-image">
       <img src="https://i.postimg.cc/1zndDfyF/Pngtree-isolated-cat-on-white-background-9158356.png" alt="Cat Icon">
       <h2>The Truth</h2>
@@ -193,31 +192,36 @@
     </div>
   </div>
   
+  <!-- Background Music -->
+  <audio id="background-music" src="https://whyp.it/tracks/256616/misery-business-synthv-cover-rough-draft-thrust-plugin" autoplay loop muted>
+    Your browser does not support the audio element.
+  </audio>
+  
   <script>
-    // Fade in sections as they come into view
+    // Unmute background music on first user interaction
+    document.addEventListener('click', () => {
+      const music = document.getElementById('background-music');
+      if (music.muted) {
+        music.muted = false;
+        music.play();
+      }
+    }, { once: true });
+    
+    // Intersection Observer to update theme as soon as each section appears
     const sections = document.querySelectorAll('.section');
     const observer = new IntersectionObserver(entries => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('visible');
+          // Get the theme from the data attribute and update the body class immediately
+          const theme = entry.target.getAttribute('data-theme');
+          if (theme) {
+            document.body.className = theme;
+          }
         }
       });
-    }, { threshold: 0.1 });
+    }, { threshold: 0.5 });
     sections.forEach(section => observer.observe(section));
-    
-    // Change theme based on scroll position for initial sections
-    window.addEventListener('scroll', () => {
-      const scrollPos = window.scrollY;
-      if (scrollPos < window.innerHeight) {
-        document.body.className = "theme-dark";
-      } else if (scrollPos < window.innerHeight * 2) {
-        document.body.className = "theme-gray";
-      } else if (scrollPos < window.innerHeight * 3) {
-        document.body.className = "theme-light";
-      } else {
-        document.body.className = "theme-dark";
-      }
-    });
     
     // Truth section messages and navigation with looping and theme cycling
     const truthMessages = [
@@ -226,28 +230,24 @@
       "It was always about you.",
       "You've made my life full of colors.",
       "I found that you will be my best companion.",
-      "You'd be always supporting me on my high and low.",
-      "Although..",
-      "I may not be able to provide what other people would normally do",
-      "I can't hang out with you",
-      "I can't send you presents",
-      "But the thing is..",
-      "I'll be there for you",
-      "I'll always be by your side no matter what",
-      "I'll give you countless supports",
-      "Even if 8 billion of people saying 'that rock is blue'",
-      "And you said 'that rock is white'",
-      "I would lie to my own eye and i would bravely say",
-      "'That rock is white'",
-      "So..",
-      "Let's start a journey",
-      "Together",
-      "Just the two of us",
-      "Slowly",
-      "Till god seperate us",
-      "Dear Fella Fikri Attaqi",
-      "Would You Like To Join The Journey?"
-
+      "You'd always support me through highs and lows.",
+      "Although...",
+      "I may not be able to provide what others do,",
+      "I can't always be there to hang out,",
+      "I can't send you lavish presents,",
+      "But one thing is certain...",
+      "I'll always be by your side.",
+      "I'll offer you endless support.",
+      "Even if 8 billion people say 'that rock is blue',",
+      "And you insist 'that rock is white',",
+      "I'll confidently say, 'That rock is white.'",
+      "So...",
+      "Let's embark on a journey,",
+      "Just the two of us,",
+      "Slowly,",
+      "Until even the gods part us.",
+      "Dear Fella Fikri Attaqi,",
+      "Would you like to join me on this journey?"
     ];
     let currentTruthIndex = 0;
     
@@ -299,13 +299,13 @@
       const nextBtn = document.getElementById('next-btn');
       
       if (currentTruthIndex === 0) {
-        // At first truth: show "Back to Start" on the left, "Next" on the right
+        // At first truth: show "Back to Start" on left, "Next" on right
         prevBtn.innerText = "Back to Start";
         prevBtn.onclick = backToStart;
         nextBtn.innerText = "Next";
         nextBtn.onclick = nextTruth;
       } else if (currentTruthIndex === truthMessages.length - 1) {
-        // At last truth: show "Previous" on the left, "Back to Start" on the right
+        // At last truth: show "Previous" on left, "Back to Start" on right
         prevBtn.innerText = "Previous";
         prevBtn.onclick = prevTruth;
         nextBtn.innerText = "Back to Start";
@@ -325,12 +325,9 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   </script>
-  <audio id="background-music" src="https://whyp.it/tracks/18337/example-track?t=00%3A02">
-    Your browser does not support the audio element.
-  </audio>
-  
 </body>
 </html>
+
 
 
 
